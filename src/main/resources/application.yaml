@@ -1,0 +1,32 @@
+server:
+    port: 8081
+
+spring:
+    application:
+        name: mcp-server
+
+    data:
+        mongodb:
+            uri: mongodb://localhost:27017/ai_agent_db
+            auto-index-creation: true
+
+    ai:
+        model:
+            chat: ollama
+            embedding: ollama
+
+        ollama:
+            base-url: http://localhost:11434
+
+            chat:
+                options:
+                    model: smollm2:360m-instruct-q4_K_M
+                    temperature: 0.2
+
+            embedding:
+                options:
+                    model: all-minilm
+
+        mcp:
+            server:
+                protocol: STREAMABLE
