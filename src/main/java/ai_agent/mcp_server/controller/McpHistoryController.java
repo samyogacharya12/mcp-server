@@ -1,10 +1,8 @@
 package ai_agent.mcp_server.controller;
 
+import ai_agent.mcp_server.dto.HistoryRequest;
 import ai_agent.mcp_server.service.MongoChatHistoryService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -23,5 +21,14 @@ public class McpHistoryController {
         return mongoChatHistoryService.getRecentHistoryAsText(conversationId, 10);
     }
 
+
+    @PostMapping("/search")
+    public String search(@RequestBody HistoryRequest request) {
+
+        return mongoChatHistoryService.searchConversation(
+                request.getConversationId(),
+                request.getQuestion()
+        );
+    }
 
 }

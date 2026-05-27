@@ -2,9 +2,12 @@ package ai_agent.mcp_server.service;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvisor;
+import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class RagService {
@@ -26,36 +29,35 @@ public class RagService {
 
         mongoChatHistoryService.saveUserMessage(conversationId, question);
 
-        String historyText = mongoChatHistoryService.getRecentHistoryAsText(conversationId, 6);
-
-        QuestionAnswerAdvisor advisor = QuestionAnswerAdvisor.builder(vectorStore)
-            .searchRequest(SearchRequest.builder()
-                .topK(6)
-                .similarityThreshold(0.65)
-                .build())
-            .build();
+        String documentContext = vectorStore.similaritySearch(
+                        SearchRequest.builder()
+                                .query(question)
+                                .topK(5)
+                                .similarityThreshold(0.30)
+                                .build()
+                )
+                .stream()
+                .map(Document::getText)
+                .collect(Collectors.joining("\n\n"));
 
         String answer = chatClient.prompt()
-            .system("""
-                You are a document question-answering assistant.
+                .system("""
+                You are a document assistant.
 
                 Rules:
-                - Answer ONLY from retrieved document context.
-                - If the answer is not in the context, say:
+                - Answer only from the document context.
+                - If not found, say:
                   "I could not find this information in the document."
-                - Do NOT use outside knowledge.
-                - Do NOT guess.
                 """)
-            .user("""
-                Recent conversation:
+                .user("""
+                Document context:
                 %s
 
-                Current question:
+                Question:
                 %s
-                """.formatted(historyText, question))
-            .advisors(advisor)
-            .call()
-            .content();
+                """.formatted(documentContext, question))
+                .call()
+                .content();
 
         mongoChatHistoryService.saveAssistantMessage(conversationId, answer);
 
