@@ -31,4 +31,13 @@ public class McpHistoryController {
         );
     }
 
+
+    @DeleteMapping("/history/{conversationId}")
+    public String clearHistory(
+            @PathVariable String conversationId
+    ) {
+        mongoChatHistoryService.clearHistory(conversationId);
+        return "Conversation memory cleared successfully";
+    }
+
 }

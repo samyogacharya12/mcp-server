@@ -57,6 +57,10 @@ public class MongoChatHistoryService {
         return messages.toString();
     }
 
+    public void clearHistory(String conversationId) {
+        repository.deleteByConversationId(conversationId);
+    }
+
     public String getRecentHistoryAsText(String conversationId, int limit) {
         List<ChatMessageEntity> history = repository.findByConversationIdOrderByCreatedAtAsc(conversationId);
 
