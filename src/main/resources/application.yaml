@@ -20,7 +20,7 @@ spring:
 
             chat:
                 options:
-                    model: smollm2:360m-instruct-q4_K_M
+                    model: llama3.1
                     temperature: 0.2
 
             embedding:
@@ -29,4 +29,7 @@ spring:
 
         mcp:
             server:
+                enabled: true
+                name: ai-tools-server
+                version: 1.0.0
                 protocol: STREAMABLE
