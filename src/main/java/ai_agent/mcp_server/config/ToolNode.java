@@ -41,7 +41,11 @@ public class ToolNode {
                 response,
                 state.documentContext(),
                 response,
-                steps
+                steps,
+                null,
+                false,
+                state.memory(),
+                state.checkpointId()
         );
 
     }

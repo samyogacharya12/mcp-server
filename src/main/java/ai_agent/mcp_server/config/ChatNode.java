@@ -31,7 +31,11 @@ public class ChatNode {
                 state.toolResult(),
                 state.documentContext(),
                 response,
-                steps
+                steps,
+                null,
+                false,
+                state.memory(),
+                state.checkpointId()
         );
     }
 }

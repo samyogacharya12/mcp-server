@@ -40,7 +40,11 @@ public class DocumentNode {
                 state.toolResult(),
                 answer,
                 answer,
-                steps
+                steps,
+                null,
+                false,
+                state.memory(),
+                state.checkpointId()
         );
 
     }

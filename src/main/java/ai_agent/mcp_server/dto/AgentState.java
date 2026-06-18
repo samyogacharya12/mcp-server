@@ -1,9 +1,11 @@
 package ai_agent.mcp_server.dto;
 
 import ai_agent.mcp_server.enumconstant.AgentRoute;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record AgentState(
 
         String userMessage,
@@ -16,7 +18,15 @@ public record AgentState(
 
         String finalResponse,
 
-        List<String> executionHistory
+        List<String> executionHistory,
+
+        String errorMessage,
+
+        boolean hasError,
+
+        List<String> memory,
+
+        String checkpointId
 
 ) {
 }

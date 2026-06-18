@@ -40,12 +40,16 @@ public class AgentWorkflowController {
                         null,
                         null,
                         null,
-                        new ArrayList<>()
+                        new ArrayList<>(),
+                        null,
+                        false,
+                        new ArrayList<>(),
+                        null
                 );
 
 
         return agentWorkflowService
-                .execute(initialState);
+                .execute(initialState, new Exception());
 
     }
 }

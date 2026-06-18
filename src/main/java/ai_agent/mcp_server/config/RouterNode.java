@@ -48,7 +48,11 @@ public class RouterNode {
                 state.toolResult(),
                 state.documentContext(),
                 state.finalResponse(),
-                steps
+                steps,
+                null,
+                false,
+                state.memory(),
+                state.checkpointId()
         );
 
     }
