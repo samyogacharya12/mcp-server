@@ -13,6 +13,7 @@ public record WorkflowResponse(
         boolean hasError,
         String errorMessage,
         List<String> memory,
-        String checkpointId
+        String checkpointId,
+        String conversationId
 ) {
 }

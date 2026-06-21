@@ -76,7 +76,8 @@ public class AgentWorkflowService {
                     savedMemoryState.hasError(),
                     savedMemoryState.errorMessage(),
                     savedMemoryState.memory(),
-                    savedMemoryState.checkpointId()
+                    savedMemoryState.checkpointId(),
+                    savedMemoryState.conversationId()
             );
         } catch (Exception ex) {
             AgentState errorState = errorNode.handle(exception, state);
@@ -87,14 +88,11 @@ public class AgentWorkflowService {
                     true,
                     errorState.errorMessage(),
                     errorState.memory(),
-                    errorState.checkpointId()
-            );
+                    errorState.checkpointId(),
+                    errorState.conversationId()
+                    );
 
         }
     }
-
-
-
-
 
 }

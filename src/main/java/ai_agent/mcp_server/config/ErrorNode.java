@@ -10,6 +10,7 @@ public class ErrorNode {
     public AgentState handle(Exception ex, AgentState state) {
 
         return new AgentState(
+                state.conversationId(),
                 state.userMessage(),
                 state.route(),
                 state.toolResult(),

@@ -26,6 +26,7 @@ public class ChatNode {
         steps.add("ChatNode generated normal AI response");
 
         return new AgentState(
+                state.conversationId(),
                 state.userMessage(),
                 state.route(),
                 state.toolResult(),

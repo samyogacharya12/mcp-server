@@ -19,6 +19,7 @@ public class CheckpointNode {
         steps.add("CheckpointNode created checkpoint: " + checkpointId);
 
         return new AgentState(
+                state.conversationId(),
                 state.userMessage(),
                 state.route(),
                 state.toolResult(),

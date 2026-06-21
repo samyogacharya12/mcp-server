@@ -36,6 +36,7 @@ public class ToolNode {
 
 
         return new AgentState(
+                state.conversationId(),
                 state.userMessage(),
                 state.route(),
                 response,

@@ -30,6 +30,7 @@ public class ResponseNode {
             steps.add("ResponseNode prepared final response");
 
             return new AgentState(
+                    state.conversationId(),
                     state.userMessage(),
                     state.route(),
                     state.toolResult(),
@@ -43,7 +44,9 @@ public class ResponseNode {
             );
         } catch (Exception e) {
             log.error("generate agent state", e);
-            return new AgentState(   state.userMessage(),
+            return new AgentState(
+                    state.conversationId(),
+                    state.userMessage(),
                     state.route(),
                     state.toolResult(),
                     state.documentContext(),

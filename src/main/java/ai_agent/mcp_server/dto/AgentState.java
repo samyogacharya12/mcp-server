@@ -7,6 +7,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record AgentState(
+        String conversationId,
 
         String userMessage,
 

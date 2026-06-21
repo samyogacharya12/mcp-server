@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/workflow")
@@ -32,9 +33,15 @@ public class AgentWorkflowController {
             @RequestBody Payload payload
     ){
 
+        String conversationId = payload.getConversionId();
+
+        if (conversationId == null || conversationId.isBlank()) {
+            conversationId = UUID.randomUUID().toString();
+        }
 
         AgentState initialState =
                 new AgentState(
+                        conversationId,
                         payload.getMessage(),
                         null,
                         null,

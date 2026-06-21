@@ -43,6 +43,7 @@ public class RouterNode {
         List<String> steps = new ArrayList<>(state.executionHistory());
         steps.add("RouterNode selected route: " + route);
         return new AgentState(
+                state.conversationId(),
                 state.userMessage(),
                 route,
                 state.toolResult(),

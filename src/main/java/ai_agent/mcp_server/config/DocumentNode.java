@@ -35,6 +35,7 @@ public class DocumentNode {
         List<String> steps = new ArrayList<>(state.executionHistory());
         steps.add("DocumentNode searched pgvector document context");
         return new AgentState(
+                state.conversationId(),
                 state.userMessage(),
                 state.route(),
                 state.toolResult(),

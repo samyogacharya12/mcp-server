@@ -13,5 +13,7 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Payload {
 
+    private String conversionId;
+
     private String message;
 }
