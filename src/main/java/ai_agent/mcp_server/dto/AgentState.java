@@ -27,7 +27,8 @@ public record AgentState(
 
         List<String> memory,
 
-        String checkpointId
+        String checkpointId,
 
+        int retryCount
 ) {
 }

@@ -4,6 +4,8 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AiAgentService {
 
@@ -32,6 +34,31 @@ public class AiAgentService {
                 .call()
                 .content();
 
+    }
+
+    public String chat(String message, List<String> memory) {
+
+        String previousMemory = String.join("\n", memory);
+
+        return chatClient
+                .prompt()
+                .system("""
+                    You are a normal helpful AI assistant.
+
+                    Rules:
+                    - Answer the user's question directly.
+                    - Do not mention tools.
+                    - Do not mention function calls.
+                    - Do not mention MCP.
+                    - Do not output tool JSON.
+                    - Do not say you are not allowed to call tools.
+
+                    Previous conversation:
+                    %s
+                    """.formatted(previousMemory))
+                .user(message)
+                .call()
+                .content();
     }
 
     // MCP Tool Execution

@@ -45,7 +45,8 @@ public class DocumentNode {
                 null,
                 false,
                 state.memory(),
-                state.checkpointId()
+                state.checkpointId(),
+                state.retryCount()
         );
 
     }

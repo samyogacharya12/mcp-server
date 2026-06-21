@@ -20,7 +20,8 @@ public class ErrorNode {
                 null,
                 false,
                 state.memory(),
-                state.checkpointId()
+                state.checkpointId(),
+                state.retryCount()
         );
     }
 

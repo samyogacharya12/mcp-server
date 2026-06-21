@@ -40,7 +40,8 @@ public class ResponseNode {
                     exception.getMessage(),
                     false,
                     state.memory(),
-                    state.checkpointId()
+                    state.checkpointId(),
+                    state.retryCount()
             );
         } catch (Exception e) {
             log.error("generate agent state", e);
@@ -55,7 +56,8 @@ public class ResponseNode {
                     exception.getMessage(),
                     true,
                     state.memory(),
-                    state.checkpointId());
+                    state.checkpointId(),
+                    state.retryCount());
         }
     }
 }

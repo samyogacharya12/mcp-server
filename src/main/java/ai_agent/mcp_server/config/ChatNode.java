@@ -20,7 +20,7 @@ public class ChatNode {
     public AgentState execute(AgentState state) {
 
         String response = aiAgentService.chat(
-                state.userMessage()
+                state.userMessage(), state.memory()
         );
         List<String> steps = new ArrayList<>(state.executionHistory());
         steps.add("ChatNode generated normal AI response");
@@ -36,7 +36,8 @@ public class ChatNode {
                 null,
                 false,
                 state.memory(),
-                state.checkpointId()
+                state.checkpointId(),
+                state.retryCount()
         );
     }
 }

@@ -21,7 +21,7 @@ public class AgentWorkflowService {
     private final ErrorNode errorNode;
     private final MemoryNode memoryNode;
     private final CheckpointNode checkpointNode;
-
+    private final RetryNode retryNode;
 
     public AgentWorkflowService(
             RouterNode routerNode,
@@ -31,7 +31,8 @@ public class AgentWorkflowService {
             ResponseNode responseNode,
             ErrorNode errorNode,
             MemoryNode memoryNode,
-            CheckpointNode checkpointNode
+            CheckpointNode checkpointNode,
+            RetryNode retryNode
     ) {
         this.routerNode = routerNode;
         this.documentNode = documentNode;
@@ -41,6 +42,7 @@ public class AgentWorkflowService {
         this.errorNode = errorNode;
         this.memoryNode = memoryNode;
         this.checkpointNode = checkpointNode;
+        this.retryNode = retryNode;
     }
 
     public WorkflowResponse execute(AgentState state, Exception exception) {
@@ -57,12 +59,10 @@ public class AgentWorkflowService {
 
             AgentState agentState = routerNode.determineRoute(checkpointState);
 
+            AgentState processedState =
+                    executeSelectedNodeWithRetry(agentState);
 
-            AgentState processedState = switch (agentState.route()) {
-                case AgentRoute.MCP_TOOL -> toolNode.execute(agentState);
-                case AgentRoute.DOCUMENT_SEARCH -> documentNode.execute(agentState);
-                default -> chatNode.execute(agentState);
-            };
+
 
             AgentState finalState = responseNode.generate(processedState, exception);
 
@@ -93,6 +93,34 @@ public class AgentWorkflowService {
                     );
 
         }
+    }
+
+    private AgentState executeSelectedNodeWithRetry(AgentState state) {
+
+        try {
+            return executeSelectedNode(state);
+
+        } catch (Exception ex) {
+
+            if (retryNode.canRetry(state)) {
+
+                AgentState retryState =
+                        retryNode.incrementRetry(state, ex);
+
+                return executeSelectedNode(retryState);
+            }
+
+            throw ex;
+        }
+    }
+
+    private AgentState executeSelectedNode(AgentState state) {
+
+        return switch (state.route()) {
+            case MCP_TOOL -> toolNode.execute(state);
+            case DOCUMENT_SEARCH -> documentNode.execute(state);
+            case NORMAL_CHAT -> chatNode.execute(state);
+        };
     }
 
 }

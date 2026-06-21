@@ -5,18 +5,26 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Component
-public class CheckpointNode {
+public class RetryNode {
+
+    private static final int MAX_RETRY = 1;
 
 
-    public AgentState createCheckpoint(AgentState state) {
+    public boolean canRetry(AgentState state) {
+        return state.retryCount() < MAX_RETRY;
+    }
 
-        String checkpointId = UUID.randomUUID().toString();
+    public AgentState incrementRetry(AgentState state, Exception ex) {
 
         List<String> steps = new ArrayList<>(state.executionHistory());
-        steps.add("CheckpointNode created checkpoint: " + checkpointId);
+
+        steps.add(
+                "RetryNode retry attempt: " + (state.retryCount() + 1)
+                        + " after error: "
+                        + ex.getClass().getSimpleName()
+        );
 
         return new AgentState(
                 state.conversationId(),
@@ -26,13 +34,16 @@ public class CheckpointNode {
                 state.documentContext(),
                 state.finalResponse(),
                 steps,
-                state.errorMessage(),
-                state.hasError(),
+                ex.getMessage(),
+                false,
                 state.memory(),
-                checkpointId,
-                state.retryCount()
+                state.checkpointId(),
+                state.retryCount() + 1
         );
     }
+
+
+
 
 
 }
