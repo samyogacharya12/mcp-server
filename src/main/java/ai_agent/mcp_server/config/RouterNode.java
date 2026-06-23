@@ -13,12 +13,17 @@ public class RouterNode {
 
     public AgentState determineRoute(AgentState state) {
 
-        String message=state.userMessage();
+        String message=state.userMessage().toLowerCase();
 
         AgentRoute route;
 
 
-        if(
+        if (message.contains("delete")
+                || message.contains("remove")
+                || message.contains("clear")) {
+            route = AgentRoute.HUMAN_APPROVAL;
+        }
+        else if(
                 message.contains("weather")
                         ||
                         message.contains("time")
@@ -33,6 +38,8 @@ public class RouterNode {
                 message.contains("document")
                         ||
                         message.contains("pdf")
+                        ||
+                        message.contains("file")
         ){
             route = AgentRoute.DOCUMENT_SEARCH;
 
@@ -54,7 +61,8 @@ public class RouterNode {
                 false,
                 state.memory(),
                 state.checkpointId(),
-                state.retryCount()
+                state.retryCount(),
+                state.approvalRequired()
         );
 
     }

@@ -37,7 +37,8 @@ public class ChatNode {
                 false,
                 state.memory(),
                 state.checkpointId(),
-                state.retryCount()
+                state.retryCount(),
+                state.approvalRequired()
         );
     }
 }

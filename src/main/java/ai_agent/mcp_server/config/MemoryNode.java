@@ -48,7 +48,8 @@ public class MemoryNode {
                 state.hasError(),
                 memory,
                 state.checkpointId(),
-                state.retryCount()
+                state.retryCount(),
+                state.approvalRequired()
         );
 
     }
@@ -77,7 +78,8 @@ public class MemoryNode {
                 state.hasError(),
                 memory,
                 state.checkpointId(),
-                state.retryCount()
+                state.retryCount(),
+                state.approvalRequired()
         );
     }
 

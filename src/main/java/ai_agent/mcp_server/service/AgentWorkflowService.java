@@ -3,7 +3,6 @@ package ai_agent.mcp_server.service;
 import ai_agent.mcp_server.config.*;
 import ai_agent.mcp_server.dto.AgentState;
 import ai_agent.mcp_server.dto.WorkflowResponse;
-import ai_agent.mcp_server.enumconstant.AgentRoute;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +21,7 @@ public class AgentWorkflowService {
     private final MemoryNode memoryNode;
     private final CheckpointNode checkpointNode;
     private final RetryNode retryNode;
+    private final HumanApprovalNode humanApprovalNode;
 
     public AgentWorkflowService(
             RouterNode routerNode,
@@ -32,7 +32,8 @@ public class AgentWorkflowService {
             ErrorNode errorNode,
             MemoryNode memoryNode,
             CheckpointNode checkpointNode,
-            RetryNode retryNode
+            RetryNode retryNode,
+            HumanApprovalNode humanApprovalNode
     ) {
         this.routerNode = routerNode;
         this.documentNode = documentNode;
@@ -43,6 +44,7 @@ public class AgentWorkflowService {
         this.memoryNode = memoryNode;
         this.checkpointNode = checkpointNode;
         this.retryNode = retryNode;
+        this.humanApprovalNode = humanApprovalNode;
     }
 
     public WorkflowResponse execute(AgentState state, Exception exception) {
@@ -77,7 +79,8 @@ public class AgentWorkflowService {
                     savedMemoryState.errorMessage(),
                     savedMemoryState.memory(),
                     savedMemoryState.checkpointId(),
-                    savedMemoryState.conversationId()
+                    savedMemoryState.conversationId(),
+                    savedMemoryState.approvalRequired()
             );
         } catch (Exception ex) {
             AgentState errorState = errorNode.handle(exception, state);
@@ -89,7 +92,8 @@ public class AgentWorkflowService {
                     errorState.errorMessage(),
                     errorState.memory(),
                     errorState.checkpointId(),
-                    errorState.conversationId()
+                    errorState.conversationId(),
+                    errorState.approvalRequired()
                     );
 
         }
@@ -120,6 +124,7 @@ public class AgentWorkflowService {
             case MCP_TOOL -> toolNode.execute(state);
             case DOCUMENT_SEARCH -> documentNode.execute(state);
             case NORMAL_CHAT -> chatNode.execute(state);
+            case HUMAN_APPROVAL -> humanApprovalNode.requestApproval(state);
         };
     }
 

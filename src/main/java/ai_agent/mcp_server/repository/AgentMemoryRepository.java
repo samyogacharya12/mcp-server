@@ -10,4 +10,6 @@ public interface AgentMemoryRepository extends MongoRepository<AgentMemory, Stri
     List<AgentMemory> findByConversationIdOrderByCreatedAtAsc(
             String conversationId
     );
+
+    void deleteByConversationId(String conversationId);
 }

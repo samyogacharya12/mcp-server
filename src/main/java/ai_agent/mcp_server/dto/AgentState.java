@@ -29,6 +29,7 @@ public record AgentState(
 
         String checkpointId,
 
-        int retryCount
+        int retryCount,
+        boolean approvalRequired
 ) {
 }

@@ -14,6 +14,7 @@ public record WorkflowResponse(
         String errorMessage,
         List<String> memory,
         String checkpointId,
-        String conversationId
+        String conversationId,
+        boolean approvalRequired
 ) {
 }

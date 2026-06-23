@@ -47,7 +47,8 @@ public class ToolNode {
                 false,
                 state.memory(),
                 state.checkpointId(),
-                state.retryCount()
+                state.retryCount(),
+                state.approvalRequired()
         );
 
     }

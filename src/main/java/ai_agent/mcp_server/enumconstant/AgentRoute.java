@@ -6,5 +6,8 @@ public enum AgentRoute {
 
     DOCUMENT_SEARCH,
 
-    NORMAL_CHAT
+    NORMAL_CHAT,
+
+    HUMAN_APPROVAL
+
 }

@@ -5,18 +5,23 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Component
-public class CheckpointNode {
+public class HumanApprovalNode {
 
-
-    public AgentState createCheckpoint(AgentState state) {
-
-        String checkpointId = UUID.randomUUID().toString();
+    public AgentState requestApproval(AgentState state) {
 
         List<String> steps = new ArrayList<>(state.executionHistory());
-        steps.add("CheckpointNode created checkpoint: " + checkpointId);
+        steps.add("HumanApprovalNode blocked risky action and requested approval");
+
+        String response = """
+                This action requires human approval before execution.
+
+                Requested action:
+                %s
+
+                Please confirm approval before continuing.
+                """.formatted(state.userMessage());
 
         return new AgentState(
                 state.conversationId(),
@@ -24,16 +29,15 @@ public class CheckpointNode {
                 state.route(),
                 state.toolResult(),
                 state.documentContext(),
-                state.finalResponse(),
+                response,
                 steps,
                 state.errorMessage(),
                 state.hasError(),
                 state.memory(),
-                checkpointId,
+                state.checkpointId(),
                 state.retryCount(),
-                state.approvalRequired()
+                true
         );
     }
-
 
 }

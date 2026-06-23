@@ -21,7 +21,8 @@ public class ErrorNode {
                 false,
                 state.memory(),
                 state.checkpointId(),
-                state.retryCount()
+                state.retryCount(),
+                state.approvalRequired()
         );
     }
 
