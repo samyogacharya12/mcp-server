@@ -4,14 +4,14 @@ import ai_agent.mcp_server.dto.AgentState;
 import ai_agent.mcp_server.dto.ApprovalRequest;
 import ai_agent.mcp_server.dto.Payload;
 import ai_agent.mcp_server.dto.WorkflowResponse;
+import ai_agent.mcp_server.entity.WorkflowExecution;
 import ai_agent.mcp_server.service.AgentWorkflowService;
 import ai_agent.mcp_server.service.ApprovalService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import ai_agent.mcp_server.service.WorkflowExecutionService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,16 +21,21 @@ public class AgentWorkflowController {
 
     private final AgentWorkflowService agentWorkflowService;
 
+    private final WorkflowExecutionService workflowExecutionService;
+
     private final ApprovalService approvalService;
 
     public AgentWorkflowController(
             AgentWorkflowService agentWorkflowService,
-            ApprovalService approvalService
+            ApprovalService approvalService,
+            WorkflowExecutionService workflowExecutionService
     ){
         this.agentWorkflowService =
                 agentWorkflowService;
         this.approvalService =
                 approvalService;
+        this.workflowExecutionService =
+                workflowExecutionService;
     }
 
 
@@ -73,4 +78,13 @@ public class AgentWorkflowController {
     ) {
         return approvalService.approveAction(request);
     }
+
+    @GetMapping("/executions/{conversationId}")
+    public List<WorkflowExecution> getExecutions(
+            @PathVariable String conversationId
+    ) {
+        return workflowExecutionService
+                .getExecutionByConversationId(conversationId);
+    }
+
 }
