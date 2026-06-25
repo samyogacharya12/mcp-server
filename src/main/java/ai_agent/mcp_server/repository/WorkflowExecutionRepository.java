@@ -18,4 +18,7 @@ public interface WorkflowExecutionRepository extends MongoRepository<WorkflowExe
     );
 
     void deleteByConversationId(String conversationId);
+
+    long countByHasError(boolean hasError);
+
 }

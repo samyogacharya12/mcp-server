@@ -1,7 +1,10 @@
 package ai_agent.mcp_server.controller;
 
 import ai_agent.mcp_server.dto.AgentState;
+import ai_agent.mcp_server.dto.WorkflowMetricsResponse;
+import ai_agent.mcp_server.dto.WorkflowResponse;
 import ai_agent.mcp_server.entity.WorkflowExecution;
+import ai_agent.mcp_server.service.AgentWorkflowService;
 import ai_agent.mcp_server.service.WorkflowExecutionService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,25 +18,26 @@ public class WorkflowExecutionController {
     private final WorkflowExecutionService service;
 
 
+    private final AgentWorkflowService agentWorkflowService;
+
     public WorkflowExecutionController(
-            WorkflowExecutionService service
+            WorkflowExecutionService service,
+            AgentWorkflowService agentWorkflowService
     ){
 
         this.service = service;
+        this.agentWorkflowService = agentWorkflowService;
 
     }
 
 
     // manual save test
     @PostMapping("/workflow/execution")
-    public WorkflowExecution save(
-            @RequestBody AgentState agentState
+    public WorkflowResponse chat(
+            @RequestBody AgentState state
     ) {
 
-        return service.save(
-                agentState
-        );
-
+        return agentWorkflowService.execute(state);
     }
 
 
@@ -85,4 +89,11 @@ public class WorkflowExecutionController {
         return "Workflow execution deleted";
 
     }
+
+
+    @GetMapping("/metrics")
+    public WorkflowMetricsResponse metrics() {
+        return service.getMetrics();
+    }
+
 }

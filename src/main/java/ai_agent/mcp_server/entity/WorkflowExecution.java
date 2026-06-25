@@ -26,6 +26,7 @@ public class WorkflowExecution {
     private boolean hasError;
     private String errorMessage;
     private LocalDateTime createdAt;
+    private long durationMs;
 
     public WorkflowExecution(String conversationId,
                              String checkpointId,
@@ -33,7 +34,8 @@ public class WorkflowExecution {
                              List<String> steps,
                              boolean hasError,
                              String errorMessage,
-                             LocalDateTime createdAt) {
+                             LocalDateTime createdAt,
+                             long durationMs) {
         this.conversationId = conversationId;
         this.checkpointId = checkpointId;
         this.route = route;
@@ -41,5 +43,6 @@ public class WorkflowExecution {
         this.hasError = hasError;
         this.errorMessage = errorMessage;
         this.createdAt = createdAt;
+        this.durationMs = durationMs;
     }
 }

@@ -31,6 +31,8 @@ public record AgentState(
 
         int retryCount,
 
-        boolean approvalRequired
+        boolean approvalRequired,
+
+        long durationMs
 ) {
 }

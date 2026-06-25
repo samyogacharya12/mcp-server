@@ -22,6 +22,7 @@ public class AgentWorkflowService {
     private final CheckpointNode checkpointNode;
     private final RetryNode retryNode;
     private final HumanApprovalNode humanApprovalNode;
+    private final WorkflowExecutionService workflowExecutionService;
 
     public AgentWorkflowService(
             RouterNode routerNode,
@@ -33,7 +34,8 @@ public class AgentWorkflowService {
             MemoryNode memoryNode,
             CheckpointNode checkpointNode,
             RetryNode retryNode,
-            HumanApprovalNode humanApprovalNode
+            HumanApprovalNode humanApprovalNode,
+            WorkflowExecutionService workflowExecutionService
     ) {
         this.routerNode = routerNode;
         this.documentNode = documentNode;
@@ -45,9 +47,69 @@ public class AgentWorkflowService {
         this.checkpointNode = checkpointNode;
         this.retryNode = retryNode;
         this.humanApprovalNode = humanApprovalNode;
+        this.workflowExecutionService = workflowExecutionService;
     }
 
+    public WorkflowResponse execute(AgentState state) {
+
+        long startTime = System.currentTimeMillis();
+
+        try {
+            AgentState memoryState = memoryNode.loadMemory(state);
+
+            AgentState checkpointState = checkpointNode.createCheckpoint(memoryState);
+
+            AgentState routedState = routerNode.determineRoute(checkpointState);
+
+            AgentState processedState = executeSelectedNodeWithRetry(routedState);
+
+            AgentState finalState = responseNode.generate(processedState, new Exception());
+
+            AgentState savedMemoryState = memoryNode.saveMemory(finalState);
+
+            long durationMs = System.currentTimeMillis() - startTime;
+
+            workflowExecutionService.save(savedMemoryState, durationMs);
+
+            return new WorkflowResponse(
+                    savedMemoryState.finalResponse(),
+                    savedMemoryState.route(),
+                    savedMemoryState.executionHistory(),
+                    savedMemoryState.hasError(),
+                    savedMemoryState.errorMessage(),
+                    savedMemoryState.memory(),
+                    savedMemoryState.checkpointId(),
+                    savedMemoryState.conversationId(),
+                    savedMemoryState.approvalRequired(),
+                    durationMs
+            );
+
+        } catch (Exception ex) {
+
+            AgentState errorState = errorNode.handle(ex, state);
+
+            long durationMs = System.currentTimeMillis() - startTime;
+
+            workflowExecutionService.save(errorState, durationMs);
+
+            return new WorkflowResponse(
+                    errorState.finalResponse(),
+                    errorState.route(),
+                    errorState.executionHistory(),
+                    errorState.hasError(),
+                    errorState.errorMessage(),
+                    errorState.memory(),
+                    errorState.checkpointId(),
+                    errorState.conversationId(),
+                    errorState.approvalRequired(),
+                    errorState.durationMs()
+            );
+        }
+    }
+
+
     public WorkflowResponse execute(AgentState state, Exception exception) {
+        long startTime = System.currentTimeMillis();
         try {
             List<String> histories =
                     new ArrayList<>(
@@ -80,7 +142,8 @@ public class AgentWorkflowService {
                     savedMemoryState.memory(),
                     savedMemoryState.checkpointId(),
                     savedMemoryState.conversationId(),
-                    savedMemoryState.approvalRequired()
+                    savedMemoryState.approvalRequired(),
+                    savedMemoryState.durationMs()
             );
         } catch (Exception ex) {
             AgentState errorState = errorNode.handle(exception, state);
@@ -93,7 +156,8 @@ public class AgentWorkflowService {
                     errorState.memory(),
                     errorState.checkpointId(),
                     errorState.conversationId(),
-                    errorState.approvalRequired()
+                    errorState.approvalRequired(),
+                    errorState.durationMs()
                     );
 
         }

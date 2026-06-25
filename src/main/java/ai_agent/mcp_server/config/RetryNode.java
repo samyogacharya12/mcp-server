@@ -39,7 +39,8 @@ public class RetryNode {
                 state.memory(),
                 state.checkpointId(),
                 state.retryCount() + 1,
-                state.approvalRequired()
+                state.approvalRequired(),
+                0
         );
     }
 

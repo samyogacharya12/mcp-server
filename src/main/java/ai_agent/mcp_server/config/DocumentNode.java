@@ -47,7 +47,8 @@ public class DocumentNode {
                 state.memory(),
                 state.checkpointId(),
                 state.retryCount(),
-                state.approvalRequired()
+                state.approvalRequired(),
+                0
         );
 
     }

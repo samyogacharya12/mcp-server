@@ -30,7 +30,8 @@ public class ApprovalService {
                     List.of(),
                     request.checkpointId(),
                     request.conversationId(),
-                    false
+                    false,
+                    0
             );
         }
 
@@ -50,7 +51,8 @@ public class ApprovalService {
                 List.of(),
                 request.checkpointId(),
                 request.conversationId(),
-                false
+                false,
+                0
         );
     }
 

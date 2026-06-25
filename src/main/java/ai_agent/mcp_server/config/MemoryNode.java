@@ -49,7 +49,8 @@ public class MemoryNode {
                 memory,
                 state.checkpointId(),
                 state.retryCount(),
-                state.approvalRequired()
+                state.approvalRequired(),
+                0
         );
 
     }
@@ -79,7 +80,8 @@ public class MemoryNode {
                 memory,
                 state.checkpointId(),
                 state.retryCount(),
-                state.approvalRequired()
+                state.approvalRequired(),
+                0
         );
     }
 

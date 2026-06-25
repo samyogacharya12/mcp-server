@@ -42,7 +42,8 @@ public class ResponseNode {
                     state.memory(),
                     state.checkpointId(),
                     state.retryCount(),
-                    state.approvalRequired()
+                    state.approvalRequired(),
+                    0
             );
         } catch (Exception e) {
             log.error("generate agent state", e);
@@ -59,7 +60,8 @@ public class ResponseNode {
                     state.memory(),
                     state.checkpointId(),
                     state.retryCount(),
-                    state.approvalRequired());
+                    state.approvalRequired(),
+                    0);
         }
     }
 }

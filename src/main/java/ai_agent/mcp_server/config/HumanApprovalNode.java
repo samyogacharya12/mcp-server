@@ -36,7 +36,8 @@ public class HumanApprovalNode {
                 state.memory(),
                 state.checkpointId(),
                 state.retryCount(),
-                true
+                true,
+                0
         );
     }
 
